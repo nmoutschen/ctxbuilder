@@ -1,0 +1,18 @@
+[package]
+name = "ctxbuilder"
+version = "0.1.0"
+edition = "2021"
+authors = ["Nicolas Moutschen <nicolas.moutschen@gmail.com>"]
+repository = "https://github.com/nmoutschen/ctxbuilder/"
+license = "MIT"
+readme = "README.md"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[features]
+
+default = ["uuid"]
+uuid = ["dep:uuid"]
+
+[dependencies]
+uuid = { version = "1.7.0", features = ["v4"], optional = true }
