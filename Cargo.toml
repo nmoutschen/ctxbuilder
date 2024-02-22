@@ -1,6 +1,6 @@
 [package]
 name = "ctxbuilder"
-version = "0.1.0"
+version = "0.2.0"
 edition = "2021"
 authors = ["Nicolas Moutschen <nicolas.moutschen@gmail.com>"]
 repository = "https://github.com/nmoutschen/ctxbuilder/"

@@ -8,7 +8,7 @@ struct Person {
 }
 
 impl Builder for Person {
-    fn build(ctx: &mut ctxbuilder::Context) -> Self {
+    fn build<C: Context>(ctx: &mut C) -> Self {
         // Create a new ID for `Person`
         let id = *ctx.entry_named("person").or_insert_with(|| Uuid::new_v4());
 
@@ -23,7 +23,7 @@ struct Pet {
 }
 
 impl Builder for Pet {
-    fn build(ctx: &mut ctxbuilder::Context) -> Self {
+    fn build<C: Context>(ctx: &mut C) -> Self {
         let owner = *ctx.entry_named("person").or_insert_with(|| Uuid::new_v4());
         Self {
             owner,
@@ -40,33 +40,32 @@ enum PetType {
 }
 
 impl Builder for PetType {
-    fn build(ctx: &mut ctxbuilder::Context) -> Self {
+    fn build<C: Context>(ctx: &mut C) -> Self {
         *ctx.entry().or_insert(PetType::Dog)
     }
 }
 
 #[test]
 fn test_builder_owner() {
-    /// GIVEN a single Context
-    let mut ctx = Context::new();
+    // GIVEN a single Context
+    let mut ctx = ctxbuilder::ctx();
 
-    /// WHEN creating a `person` and `pet` from that Context
-    let person = Person::build(&mut ctx);
+    // WHEN creating a `person` and `pet` from that Context
+    let person: Person = ctx.build();
     let pet = Pet::build(&mut ctx);
 
-    /// THEN they use the same `person` ID
+    // THEN they use the same `person` ID
     assert_eq!(person.id, pet.owner);
 }
 
 #[test]
 fn test_builder_pet_type() {
-    /// GIVEN a single Context that contains a PetType
-    let mut ctx = Context::new();
-    ctx.insert(PetType::Cat);
+    // GIVEN a single Context that contains a PetType
+    let mut ctx = ctxbuilder::ctx().with(PetType::Cat);
 
-    /// WHEN generating a new pet
+    // WHEN generating a new pet
     let pet = Pet::build(&mut ctx);
 
-    /// THEN it uses the specified pet type
+    // THEN it uses the specified pet type
     assert_eq!(pet.pet_type, PetType::Cat);
 }
